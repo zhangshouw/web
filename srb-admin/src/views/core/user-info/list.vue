@@ -88,9 +88,20 @@
           >
             锁定
           </el-button>
-          <el-tag v-else type="success" size="mini">
-            正常
-          </el-tag>
+          <el-button
+            v-else
+            type="danger"
+            size="mini"
+            @click="lock(scope.row.id, 1)"
+          >
+            解锁
+          </el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            @click="showLoginRecord(scope.row.id)">
+            登录日志
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -106,12 +117,24 @@
       @size-change="changePageSize"
       @current-change="changeCurrentPage"
     />
+    <el-dialog title="用户登录日志" :visible.sync="dialogTableVisible">
+      <el-table :data="loginRecordList" border stripe>
+        <el-table-column type="index"/>
+        <el-table-column prop="ip" label="IP"/>
+        <el-table-column prop="createTime" label="登录时间"/>
+      </el-table>
+    </el-dialog>
+
   </div>
+
+  <!-- 用户登录日志 -->
+
+
 </template>
 
 
 <script>
-import userInfoApi from '@api/core/user-info'
+import userInfoApi from '@/api/core/user-info'
 
 export default {
 
@@ -139,6 +162,42 @@ export default {
         this.total = response.data.pageModel.total
       }))
 
+    },
+
+
+    // 每页记录数改变，size：回调参数，表示当前选中的“每页条数”
+    changePageSize(size) {
+      this.limit = size
+      this.fetchData()
+    },
+    // 改变页码，page：回调参数，表示当前选中的“页码”
+    changeCurrentPage(page) {
+      this.page = page
+      this.fetchData()
+    },
+    // 重置表单
+    resetData() {
+      this.searchObj = {}
+      this.fetchData()
+    },
+
+    lock(id, status) {
+      userInfoApi.lock(id, status).then((response => {
+        this.$message.success(response.message)
+        this.fetchData()
+
+      }))
+
+
+    },
+
+    showLoginRecord(id) {
+      this.dialogTableVisible = true
+      userInfoApi.getuserLoginRecordTop50(id).then((response) => {
+        this.loginRecordList = response.data.list;
+
+
+      })
     }
 
 
