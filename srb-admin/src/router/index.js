@@ -140,12 +140,45 @@ export const constantRoutes = [
         component: () => import('@/views/core/borrower/detail'),
         meta: { title: '借款人详情' },
         hidden: true
+      },
+      {
+        path: 'info-list',
+        name: 'coreBorrowInfoList',
+        component: () => import('@/views/core/borrow-info/list'),
+        meta: { title: '借款列表' }
+      },
+      {
+        path: 'info-detail/:id',
+        name: 'coreBorrowInfoDetail',
+        component: () => import('@/views/core/borrow-info/detail'),
+        meta: { title: '借款详情' },
+        hidden: true
       }
     ]
   },
 
-
-
+  {
+    path: '/core/lend',
+    component: Layout,
+    name: 'coreLend',
+    meta: { title: '标的管理', icon: 'el-icon-s-flag' },
+    alwaysShow: true,
+    children: [
+      {
+        path: 'list',
+        name: 'coreLendList',
+        component: () => import('@/views/core/lend/list'),
+        meta: { title: '标的列表' }
+      },
+      {
+        path: 'detail/:id',
+        name: 'coreLendDetail',
+        component: () => import('@/views/core/lend/detail'),
+        meta: { title: '标的详情' },
+        hidden: true
+      }
+    ]
+  },
   {
     path: '/example',
     component: Layout,
